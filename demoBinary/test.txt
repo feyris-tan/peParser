@@ -1,0 +1,2 @@
+This is a text textfile compiled into the a.exe!
+Let's do this, boys!
