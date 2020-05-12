@@ -5,10 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class PeParserTest {
@@ -37,5 +34,25 @@ public class PeParserTest {
         }
 
         Assert.assertNotNull(peParser);
+    }
+
+    private byte[] patchExfont(byte[] exfont)
+    {
+        byte rawData[] =
+                {
+                        (byte)0x42, (byte)0x4D, (byte)0x76, (byte)0x21, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x36, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x28, (byte)0x00,
+                        (byte)0x00, (byte)0x00, (byte)0x9C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x30, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x08, (byte)0x00, (byte)0x00, (byte)0x00,
+                        (byte)0x00, (byte)0x00,
+                } ;
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            baos.write(rawData);
+            baos.write(exfont,20,exfont.length - 20);
+            baos.flush();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

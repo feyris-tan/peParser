@@ -10,6 +10,10 @@ public class ImageResourceRepresentation {
     private String categoryName;
 
     public void setBuffer(@NotNull ByteBuffer buffer, int offset, int length) {
+        if (data != null)
+        {
+            throw new IllegalStateException("Buffer already set!");
+        }
         data = new byte[length];
         buffer.position(offset);
         buffer.get(data,0,length);
@@ -24,6 +28,7 @@ public class ImageResourceRepresentation {
     }
 
     public void setCategoryName(String categoryName) {
+        categoryName = categoryName.replace("\0","");
         this.categoryName = categoryName;
     }
 
@@ -37,5 +42,9 @@ public class ImageResourceRepresentation {
                 "codePage=" + codePage +
                 ", categoryName='" + categoryName + '\'' +
                 '}';
+    }
+
+    public byte[] getData() {
+        return data;
     }
 }

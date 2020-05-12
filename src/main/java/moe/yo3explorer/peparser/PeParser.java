@@ -111,9 +111,9 @@ public class PeParser {
                 info.Reserved = buffer.getInt();
 
                 ImageResourceRepresentation resourceRepresentation = new ImageResourceRepresentation();
+                resourceRepresentation.setCategoryName(String.format("%s\\%s",prefix,entries[i].Name));
                 resourceRepresentation.setBuffer(buffer,info.Data,info.Size);
                 resourceRepresentation.setCodePage(info.Reserved);
-                resourceRepresentation.setCategoryName(String.format("%s\\%s",prefix,entries[i].Name));
                 if (resources == null)
                     resources = new ArrayList<>();
                 resources.add(resourceRepresentation);
