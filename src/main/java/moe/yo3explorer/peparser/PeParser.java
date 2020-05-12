@@ -1,10 +1,7 @@
 package moe.yo3explorer.peparser;
 
 import moe.yo3explorer.peparser.peModel.*;
-import moe.yo3explorer.peparser.rsrcModel.ImageResourceDirectory;
-import moe.yo3explorer.peparser.rsrcModel.ImageResourceDataEntry;
-import moe.yo3explorer.peparser.rsrcModel.ImageResourceDirectoryEntry;
-import moe.yo3explorer.peparser.rsrcModel.ImageResourceRepresentation;
+import moe.yo3explorer.peparser.rsrcModel.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -65,11 +62,11 @@ public class PeParser {
             rsrcRva = rsrcSection.getVirtualAddress();
             rsrcOffset = rsrcSection.getPointerToRawData();
             buffer.position(rsrcOffset);
-            readRsrcSection(buffer);
+            readRsrcSection(buffer,"");
         }
     }
 
-    private void readRsrcSection(@NotNull ByteBuffer buffer)
+    private void readRsrcSection(@NotNull ByteBuffer buffer, String prefix)
     {
         ImageResourceDirectory resourceDirectory = new ImageResourceDirectory();
         resourceDirectory.Characteristics = buffer.getInt();
@@ -99,7 +96,7 @@ public class PeParser {
             {
                 int currentOffset = buffer.position();
                 buffer.position(rsrcOffset + entries[i].getNextDirOffset());
-                readRsrcSection(buffer);
+                readRsrcSection(buffer,String.format("%s\\%s",prefix,entries[i].Name));
                 buffer.position(currentOffset);
             }
             else
@@ -116,7 +113,7 @@ public class PeParser {
                 ImageResourceRepresentation resourceRepresentation = new ImageResourceRepresentation();
                 resourceRepresentation.setBuffer(buffer,info.Data,info.Size);
                 resourceRepresentation.setCodePage(info.Reserved);
-                resourceRepresentation.setCategoryName(entries[i].Name);
+                resourceRepresentation.setCategoryName(String.format("%s\\%s",prefix,entries[i].Name));
                 if (resources == null)
                     resources = new ArrayList<>();
                 resources.add(resourceRepresentation);
@@ -130,7 +127,7 @@ public class PeParser {
     private String readUnicodeString(@NotNull ByteBuffer buffer, int offset)
     {
         int oldOffset = buffer.position();
-        buffer.position(offset);
+        buffer.position(rsrcOffset + offset);
 
         int len = buffer.getShort() * 2;
         byte[] outBuffer = new byte[len];

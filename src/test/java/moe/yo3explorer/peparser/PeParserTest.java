@@ -1,5 +1,6 @@
 package moe.yo3explorer.peparser;
 
+import moe.yo3explorer.peparser.rsrcModel.ImageResourceRepresentation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public class PeParserTest {
     private static final String DEMO_BINARY_NAME = "demoBinary/a.exe";
@@ -28,6 +30,11 @@ public class PeParserTest {
 
         PeParser peParser = new PeParser(buffer);
         System.out.println("Machine Type: " + peParser.getPeHeader().getMachine());
+
+        List<ImageResourceRepresentation> resources = peParser.getResources();
+        for (ImageResourceRepresentation resource : resources) {
+            System.out.println(resource.toString());
+        }
 
         Assert.assertNotNull(peParser);
     }

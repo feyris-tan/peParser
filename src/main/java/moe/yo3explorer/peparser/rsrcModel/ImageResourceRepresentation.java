@@ -30,4 +30,12 @@ public class ImageResourceRepresentation {
     public String getCategoryName() {
         return categoryName;
     }
+
+    @Override
+    public String toString() {
+        return "ImageResourceRepresentation{" +
+                "codePage=" + codePage +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }
